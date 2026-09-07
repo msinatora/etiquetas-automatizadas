@@ -26,7 +26,7 @@ O sistema identifica informações como:
 
 - PHP
 - OCR.space API
-- HTML/CSS/JavaScript
+- HTML/CSS
 
 ---
 
