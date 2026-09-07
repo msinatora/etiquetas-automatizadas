@@ -17,7 +17,6 @@ A aplicação utiliza OCR para ler informações de etiquetas a partir de imagen
 O sistema identifica informações como:
 
 - Item
-- Nome do item
 - Código
 - Validade
 - Quantidade
