@@ -30,18 +30,35 @@ if (isset($_FILES["arquivos"]["tmp_name"])) {
             $linhas = preg_split('/\r\n|\r|\n/', trim($texto));
 
             $linhas = array_values(
-                array_filter($linhas, fn($linha) => trim($linha) !== '')
+                array_filter(
+                    array_map(function ($linha) {
+                        $linha = trim($linha);
+                        $linha = ltrim($linha, ':');
+                        return trim($linha);
+                    }, $linhas),
+                    fn($linha) => $linha !== ''
+                )
             );
 
-            $dados = array_slice($linhas, 5);
-
-            $produto = [
-                'item' => $dados[0] ?? '',
-                'codigo' => $dados[1] ?? '',
-                'validade' => rtrim($dados[2] ?? '', ':'),
-                'quantidade' => $dados[3] ?? '',
-                'fornecedor' => $dados[4] ?? ''
-            ];
+            if ($linhas[1] === 'CÓD.') {
+                // ITEM, CÓD, VAL, QTD, FORN, depois os valores
+                $produto = [
+                    'item'       => $linhas[5] ?? '',
+                    'codigo'     => $linhas[6] ?? '',
+                    'validade'   => $linhas[7] ?? '',
+                    'quantidade' => $linhas[8] ?? '',
+                    'fornecedor' => $linhas[9] ?? ''
+                ];
+            } else {
+                // ITEM, valor, CÓD, valor, VAL, valor...
+                $produto = [
+                    'item'       => $linhas[1] ?? '',
+                    'codigo'     => $linhas[3] ?? '',
+                    'validade'   => $linhas[5] ?? '',
+                    'quantidade' => $linhas[7] ?? '',
+                    'fornecedor' => $linhas[9] ?? ''
+                ];
+            }
 
             $listaRespostaFinal[] = [
                 'arquivo' => $_FILES["arquivos"]["name"][$chave],
